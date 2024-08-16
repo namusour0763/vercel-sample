@@ -1,36 +1,99 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Vercel Sample
 
-## Getting Started
+Vercel Functions, Vercel Postgres を使ってみる。
 
-First, run the development server:
+## 成果物
+
+Vercel Postgres に格納したデータを Vercel Functions でフェッチし表示する Web サイト。
+
+![site](/images/site.png)
+![postgres](/images/postgres.png)
+
+## 前提条件
+
+- GitHub / Vercel にサインアップしておくこと
+- node, npm が使えるようにしておくこと
+
+## 作業メモ
+
+### プロジェクト作成
 
 ```bash
+# プロジェクト作成
+npx create-next-app
+
+✔ What is your project named? … vercel-sample
+✔ Would you like to use TypeScript? … Yes
+✔ Would you like to use ESLint? … Yes
+✔ Would you like to use Tailwind CSS? … Yes
+✔ Would you like to use `src/` directory? … No
+✔ Would you like to use App Router? (recommended) … Yes
+✔ Would you like to customize the default import alias (@/*)? … No
+Creating a new Next.js app in /Users/xxxxxx/Desktop/vercel-sample.
+
+Success! Created my-app at /Users/xxxxxx/Desktop/vercel-sample
+
+# Next.js のスタートページを確認
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### コード編集
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+cd vercel-sample
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+# 不要なファイル削除
+# layout.tsx は npm run dev すると自動で作成される
+rm app/global.css app/layout.tsx
 
-## Learn More
+# vercel/postgres をインストール
+npm install @vercel/postgres
 
-To learn more about Next.js, take a look at the following resources:
+# ファイル作成 & ファイル編集
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### データ投入
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+詳細は Getting Started を確認すること。
 
-## Deploy on Vercel
+![getting_started](/images/getting_started.png)
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```bash
+# Vercel コマンドを利用可能に
+npm install -g vercel
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+# ログイン
+vercel login
+Vercel CLI 36.0.0
+? Log in to Vercel (Use arrow keys)
+❯ Continue with GitHub
+  Continue with GitLab
+  Continue with Bitbucket
+  Continue with Email
+  Continue with SAML Single Sign-On
+
+# 開発環境をローカルでデプロイ（npm run dev でもいいかも）
+vercel dev
+
+# ブラウザで Vercel のプロジェクトを開く
+# Storage から Postgres を作成
+
+# データベースへの接続情報を配置
+vercel env pull .env.development.local
+
+# Data > Query から以下の SQL を実行
+CREATE TABLE products (
+  id SERIAL PRIMARY KEY,
+  name VARCHAR(255) NOT NULL,
+  price DECIMAL(10, 2) NOT NULL
+);
+
+INSERT INTO products (name, price) VALUES
+  ('Product 1', 19.99),
+  ('Product 2', 29.99),
+  ('Product 3', 39.99);
+
+# Ctrl + C で一度サーバーを止め、再起動しデータが表示されるか確認
+# データが更新されない場合は Ctrl + Shift + R でキャッシュを無視したリロード
+vercel dev
+```
