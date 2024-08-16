@@ -9,12 +9,39 @@ Vercel Postgres に格納したデータを Vercel Functions でフェッチし�
 ![site](/images/site.png)
 ![postgres](/images/postgres.png)
 
-## 前提条件
+### ファイル構成
+
+```bash
+tree -I 'node_modules|public|images'
+.
+├── README.md
+├── app
+│   ├── api
+│   │   └── products
+│   │       └── route.ts # 作成
+│   ├── favicon.ico
+│   ├── layout.tsx
+│   └── page.tsx # 作成
+├── components
+│   └── ProductList.tsx # 作成
+├── next-env.d.ts
+├── next.config.mjs
+├── package-lock.json
+├── package.json
+├── postcss.config.mjs
+├── tailwind.config.ts
+├── tsconfig.json
+├── types.ts # 作成
+└── utils
+    └── data.sql # 作成
+```
+
+## 作業メモ
+
+### 前提条件
 
 - GitHub / Vercel にサインアップしておくこと
 - node, npm が使えるようにしておくこと
-
-## 作業メモ
 
 ### プロジェクト作成
 
